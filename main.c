@@ -139,15 +139,28 @@ void tocou_cauda(Jogador*j){
 }
 
 void movimento(char c, Jogador*j){
-	if(c == 'j' && j->pos.y <(ALTURA-1)) j->pos.y++;
-	if(c == 'k' && j->pos.y > 2) j->pos.y--;
-	if(c == 'l' && j->pos.x <(LARGURA-1)) j->pos.x++;
-	if(c == 'h' && j->pos.x > INICIO) j->pos.x--;
+	if(c == 'j'){
+        if(j->pos.y <(ALTURA-1))j->pos.y++;
+        else j->pos.y=2;
+    }
+	if(c == 'k') {
+        if(j->pos.y > 2)j->pos.y--;
+        else j->pos.y=ALTURA-1;
+    }
+	if(c == 'l'){ 
+        if(j->pos.x <(LARGURA-1))j->pos.x++;
+        else j->pos.x=3;
+    }
+	if(c == 'h'){ 
+        if(j->pos.x > INICIO)j->pos.x--;
+        else j->pos.x=LARGURA-1;
+    }
 }
 
 int main(){
+    FILE*highboard = fopen("./highboard.txt", "wr");
 	Jogador j = {.vida=5, .pontos=0, .pos={INICIO,2}, .identificador=JOGADOR};
-	Objeto alimento = {.qtd = 0, .identificador=ALIMENTO, .qtd_max=5, .raridade=10}, bomba = {.qtd=0, .identificador=BOMBA, .qtd_max=4, .raridade=2};
+	Objeto alimento = {.qtd = 0, .identificador=ALIMENTO, .qtd_max=5, .raridade=10}, bomba = {.qtd=0, .identificador=BOMBA, .qtd_max=50, .raridade=3};
 	Objeto*p_obj[QTD_OBJETOS] = {&alimento, &bomba};
 	char c = 0, anterior;
 	printf("Digite seu nome: ");
@@ -182,5 +195,10 @@ int main(){
 	limpa_tela();
 	printf("GAME OVER!!! >:(\n");
 	system ("/bin/stty cooked");
+    char jogadores_pontos[100];
+    while(fgets(jogadores_pontos, 100, highboard))puts(jogadores_pontos);
+    printf("%s: %d\n",j.nome, j.pontos);
+    fprintf(highboard,"%s: %d\n",j.nome, j.pontos);
+    fclose(highboard);
 	return 0;
 }
