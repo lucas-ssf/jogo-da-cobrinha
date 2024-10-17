@@ -180,11 +180,11 @@ int main(){
 
 	srand(time(NULL));
 	system ("/bin/stty raw");
-	while(1){
+	while(j.vida){
 		if(kbhit()){
 			anterior = c;
 			c = getc(stdin);
-			if(c == 'q' || j.vida == 0) break;
+			if(c == 'q') break;
 			else if(c != 'h' && c != 'j' && c != 'k' && c != 'l')c=anterior;
 		}
 		j.cauda[0].passada = j.pos;
