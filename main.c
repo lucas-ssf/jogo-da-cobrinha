@@ -129,17 +129,9 @@ void desenha_tela(Jogador j, Objeto**p){
 	printf("x\n");
 }
 
-Posicao movimento(char c, Posicao pos){
-	if(c == 'j' && pos.y <(ALTURA-1)) pos.y++;
-	if(c == 'k' && pos.y > 2) pos.y--;
-	if(c == 'l' && pos.x <(LARGURA-1)) pos.x++;
-	if(c == 'h' && pos.x > INICIO) pos.x--;
-	return pos;
-}
-
 void gerar_objeto(Objeto*o){
 	if(rand()%o->raridade == 1 && o->qtd < o->qtd_max){
-		o->pos[o->qtd] = (Posicao){rand()%(LARGURA-2)+3,rand()%(ALTURA-2)+2};
+		o->pos[o->qtd] = (Posicao){rand()%(LARGURA-3)+3,rand()%(ALTURA-2)+2};
 		o->qtd++;
 	}
 }
@@ -164,10 +156,19 @@ void tocou_objeto(Jogador*j, Objeto*o){
 
 void tocou_cauda(Jogador*j){
 	for(int i = 1; i < j->pontos; i++){
-		if((j->pos.x==j->cauda[i].atual.x) && (j->pos.y==j->cauda[i].atual.y))j->vida=0;
+		if((j->pos.x==j->cauda[i].atual.x) && (j->pos.y==j->cauda[i].atual.y)){
+            printf("OUCH!\n");
+            j->vida=0;        
+        }
 	}
 }
 
+void movimento(char c, Jogador*j){
+	if(c == 'j' && j->pos.y <(ALTURA-1)) j->pos.y++;
+	if(c == 'k' && j->pos.y > 2) j->pos.y--;
+	if(c == 'l' && j->pos.x <(LARGURA-1)) j->pos.x++;
+	if(c == 'h' && j->pos.x > INICIO) j->pos.x--;
+}
 
 int main(){
 	Jogador j = {.vida=5, .pontos=0, .pos={INICIO,2}};
@@ -180,7 +181,6 @@ int main(){
 	srand(time(NULL));
 	system ("/bin/stty raw");
 	while(1){
-        tocou_cauda(&j);
 		if(kbhit()){
 			anterior = c;
 			c = getc(stdin);
@@ -188,13 +188,14 @@ int main(){
 			else if(c != 'h' && c != 'j' && c != 'k' && c != 'l')c=anterior;
 		}
 		j.cauda[0].passada = j.pos;
-		j.pos = movimento(c, j.pos);
+		movimento(c, &j);
 		j.cauda[0].atual = j.pos;
 		for(int i = 1; i <= j.pontos; i++){
 			j.cauda[i].passada = j.cauda[i].atual;
 			j.cauda[i].atual = j.cauda[i-1].passada;
 		}
 		desenha_tela(j, p_obj);
+        tocou_cauda(&j);
 		for(int i = 0; i < QTD_OBJETOS; i++){
 			gerar_objeto(p_obj[i]);
 			tocou_objeto(&j,p_obj[i]);
