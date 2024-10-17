@@ -4,16 +4,8 @@
 #include <termios.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include "config.h"
 
-#define VELOCIDADE 1
-#define ALIMENTO 'A'
-#define BOMBA 'B'
-#define QTD_OBJETOS 2 // sempre que for adicionado um novo tipo de objeto, deve-se aumentar esse valor
-#define MAX_OBJ 50 
-#define MAX_CAUDA 50 
-#define INICIO 3
-#define ALTURA 20
-#define LARGURA 20
 #define limpa_tela() system("clear");
 #define gotoxy(x,y) printf("%c[%d;%df",0x1B,y,x)
 
@@ -30,26 +22,8 @@
 10
   1  2  3  4  5  6  7  8  9 10
 */
-typedef struct{int x,y;}Posicao;
 
-typedef struct{
-	Posicao atual,passada;
-}Cauda;
-
-typedef struct{
-	int vida, pontos;
-	char nome[12];
-	Posicao pos;
-	Cauda cauda[MAX_CAUDA];
-}Jogador;
-
-
-typedef struct{
-	int qtd, qtd_max, raridade;
-	char identificador;
-	Posicao pos[MAX_OBJ];
-}Objeto;
-
+// verifica se alguma tecla foi pressionada
 int kbhit(void)
 {
   struct termios oldt, newt;
@@ -94,11 +68,11 @@ void desenha_borda(){
 
 void barra_info(Jogador j){
 	gotoxy(1,ALTURA+2);
-	printf("%s",j.nome);
+	printf("[%s]",j.nome);
 	gotoxy(1,ALTURA+3);
-	printf("Vida:%d",j.vida);
+	printf("|Vida:%d",j.vida);
 	gotoxy(1,ALTURA+4);
-	printf("Pontos:%d",j.pontos);
+	printf("|Pontos:%d",j.pontos);
 }
 
 void coloca_objetos(Objeto**p){
@@ -112,10 +86,11 @@ void coloca_objetos(Objeto**p){
 	}
 }
 
-void desenha_cauda(Jogador j){
-	for(int i = 1; i <= j.pontos; i++){
-		gotoxy(j.cauda[i].atual.x,j.cauda[i].atual.y);
-		printf("o");
+void desenha_cauda(Jogador*j){
+	for(int i = 1; i <= j->pontos; i++){
+		gotoxy(j->cauda[i].atual.x,j->cauda[i].atual.y);
+        j->cauda[i].identificador = CAUDA;
+		printf("%c", j->cauda[i].identificador);
 	}
 }
 
@@ -124,9 +99,9 @@ void desenha_tela(Jogador j, Objeto**p){
 	barra_info(j);
 	desenha_borda();
 	coloca_objetos(p);
-	desenha_cauda(j);
+	desenha_cauda(&j);
 	gotoxy(j.pos.x,j.pos.y);
-	printf("x\n");
+	printf("%c\n", j.identificador);
 }
 
 void gerar_objeto(Objeto*o){
@@ -171,12 +146,12 @@ void movimento(char c, Jogador*j){
 }
 
 int main(){
-	Jogador j = {.vida=5, .pontos=0, .pos={INICIO,2}};
-	Objeto alimento = {.qtd = 0, .identificador=ALIMENTO, .qtd_max=5, .raridade=10}, bomba = {.qtd=0, .identificador=BOMBA, .qtd_max=4, .raridade=7};
+	Jogador j = {.vida=5, .pontos=0, .pos={INICIO,2}, .identificador=JOGADOR};
+	Objeto alimento = {.qtd = 0, .identificador=ALIMENTO, .qtd_max=5, .raridade=10}, bomba = {.qtd=0, .identificador=BOMBA, .qtd_max=4, .raridade=2};
 	Objeto*p_obj[QTD_OBJETOS] = {&alimento, &bomba};
 	char c = 0, anterior;
 	printf("Digite seu nome: ");
-	fgets(j.nome, 12, stdin);
+	scanf("%s", j.nome);
 
 	srand(time(NULL));
 	system ("/bin/stty raw");
