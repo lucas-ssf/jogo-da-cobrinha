@@ -66,7 +66,7 @@ void desenha_borda(){
 	} 
 }
 
-void barra_info(Jogador j){
+void barra_info(Jogador_t j){
 	gotoxy(1,ALTURA+2);
 	printf("[%s]",j.nome);
 	gotoxy(1,ALTURA+3);
@@ -75,7 +75,7 @@ void barra_info(Jogador j){
 	printf("|Pontos:%d",j.pontos);
 }
 
-void coloca_objetos(Objeto**p){
+void coloca_objetos(Objeto_t**p){
 	for(int j = 0; j < QTD_OBJETOS; j++){
 		if(p[j]->qtd){
 			for(int i = 0; i < p[j]->qtd; i++){
@@ -86,7 +86,7 @@ void coloca_objetos(Objeto**p){
 	}
 }
 
-void desenha_cauda(Jogador*j){
+void desenha_cauda(Jogador_t*j){
 	for(int i = 1; i <= j->pontos; i++){
 		gotoxy(j->cauda[i].atual.x,j->cauda[i].atual.y);
         j->cauda[i].identificador = CAUDA;
@@ -94,7 +94,7 @@ void desenha_cauda(Jogador*j){
 	}
 }
 
-void desenha_tela(Jogador j, Objeto**p){
+void desenha_tela(Jogador_t j, Objeto_t**p){
 	limpa_tela();
 	barra_info(j);
 	desenha_borda();
@@ -104,14 +104,14 @@ void desenha_tela(Jogador j, Objeto**p){
 	printf("%c\n", j.identificador);
 }
 
-void gerar_objeto(Objeto*o){
+void gerar_objeto(Objeto_t*o){
 	if(rand()%o->raridade == 1 && o->qtd < o->qtd_max){
-		o->pos[o->qtd] = (Posicao){rand()%(LARGURA-3)+3,rand()%(ALTURA-2)+2};
+		o->pos[o->qtd] = (Posicao_t){rand()%(LARGURA-3)+3,rand()%(ALTURA-2)+2};
 		o->qtd++;
 	}
 }
 
-void tocou_objeto(Jogador*j, Objeto*o){
+void tocou_objeto(Jogador_t*j, Objeto_t*o){
 	for(int i = 0; i < o->qtd; i++){
 		if((j->pos.x==o->pos[i].x) && (j->pos.y==o->pos[i].y)){
 			if(o->identificador == ALIMENTO){
@@ -129,7 +129,7 @@ void tocou_objeto(Jogador*j, Objeto*o){
 	}
 }
 
-void tocou_cauda(Jogador*j){
+void tocou_cauda(Jogador_t*j){
 	for(int i = 1; i < j->pontos; i++){
 		if((j->pos.x==j->cauda[i].atual.x) && (j->pos.y==j->cauda[i].atual.y)){
             printf("OUCH!\n");
@@ -138,7 +138,7 @@ void tocou_cauda(Jogador*j){
 	}
 }
 
-void movimento(char c, Jogador*j){
+void movimento(char c, Jogador_t*j){
 	if(c == 'j'){
         if(j->pos.y <(ALTURA-1))j->pos.y++;
         else j->pos.y=2;
@@ -159,9 +159,9 @@ void movimento(char c, Jogador*j){
 
 int main(){
 	FILE*leaderboard = fopen("./leaderboard.txt", "a+");
-	Jogador j = {.vida=5, .pontos=0, .pos={INICIO,2}, .identificador=JOGADOR};
-	Objeto alimento = {.qtd = 0, .identificador=ALIMENTO, .qtd_max=5, .raridade=10}, bomba = {.qtd=0, .identificador=BOMBA, .qtd_max=50, .raridade=3};
-	Objeto*p_obj[QTD_OBJETOS] = {&alimento, &bomba};
+	Jogador_t j = {.vida=5, .pontos=0, .pos={INICIO,2}, .identificador=JOGADOR};
+	Objeto_t alimento = {.qtd = 0, .identificador=ALIMENTO, .qtd_max=5, .raridade=10}, bomba = {.qtd=0, .identificador=BOMBA, .qtd_max=50, .raridade=3};
+	Objeto_t*p_obj[QTD_OBJETOS] = {&alimento, &bomba};
 	char c = 0, anterior;
 	printf("Digite seu nome: ");
 	scanf("%s", j.nome);
