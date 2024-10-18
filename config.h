@@ -15,19 +15,19 @@ typedef struct{int x,y;}Posicao;
 typedef struct{
 	Posicao atual,passada;
     char identificador;
-}Cauda;
+}Cauda_t;
 
 typedef struct{
 	int vida, pontos;
 	char nome[12], identificador;
 	Posicao pos;
 	Cauda cauda[MAX_CAUDA];
-}Jogador;
+}Jogador_t;
 
 
 typedef struct{
 	int qtd, qtd_max, raridade; // quanto menor a raridade, maior a chance de gerar o objeto
 	char identificador;
 	Posicao pos[MAX_OBJ];
-}Objeto;
+}Objeto_t;
 
