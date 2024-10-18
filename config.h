@@ -1,4 +1,4 @@
-#define VELOCIDADE 1
+#define VELOCIDADE 0.5 
 #define ALIMENTO 'A'
 #define BOMBA 'B'
 #define JOGADOR '@'

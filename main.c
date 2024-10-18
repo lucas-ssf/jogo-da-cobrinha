@@ -158,7 +158,7 @@ void movimento(char c, Jogador*j){
 }
 
 int main(){
-    FILE*highboard = fopen("./highboard.txt", "wr");
+	FILE*leaderboard = fopen("./leaderboard.txt", "a+");
 	Jogador j = {.vida=5, .pontos=0, .pos={INICIO,2}, .identificador=JOGADOR};
 	Objeto alimento = {.qtd = 0, .identificador=ALIMENTO, .qtd_max=5, .raridade=10}, bomba = {.qtd=0, .identificador=BOMBA, .qtd_max=50, .raridade=3};
 	Objeto*p_obj[QTD_OBJETOS] = {&alimento, &bomba};
@@ -190,15 +190,16 @@ int main(){
 		}
 		gotoxy(1,ALTURA+4);
 		printf("\n");
-		sleep(VELOCIDADE);
+		usleep(VELOCIDADE*1000000);
 	}
 	limpa_tela();
-	printf("GAME OVER!!! >:(\n");
+	printf("GAME OVER!!! >:(\n\n");
 	system ("/bin/stty cooked");
-    char jogadores_pontos[100];
-    while(fgets(jogadores_pontos, 100, highboard))puts(jogadores_pontos);
-    printf("%s: %d\n",j.nome, j.pontos);
-    fprintf(highboard,"%s: %d\n",j.nome, j.pontos);
-    fclose(highboard);
+	char jogadores_pontos[100];
+	puts("======LEADERBOARD=====");
+	while(fgets(jogadores_pontos, 100, leaderboard))printf("%s",jogadores_pontos);
+	printf("%s: %d\n",j.nome, j.pontos);
+	fprintf(leaderboard,"%s: %d\n",j.nome, j.pontos);
+	fclose(leaderboard);
 	return 0;
 }
