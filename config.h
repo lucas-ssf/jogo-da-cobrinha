@@ -15,7 +15,7 @@ typedef struct{int x,y;}Posicao;
 typedef struct{
 	Posicao atual,passada;
     char identificador;
-}Cauda_t;
+}Cauda;
 
 typedef struct{
 	int vida, pontos;

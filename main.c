@@ -106,7 +106,7 @@ void desenha_tela(Jogador_t j, Objeto_t**p){
 
 void gerar_objeto(Objeto_t*o){
 	if(rand()%o->raridade == 1 && o->qtd < o->qtd_max){
-		o->pos[o->qtd] = (Posicao_t){rand()%(LARGURA-3)+3,rand()%(ALTURA-2)+2};
+		o->pos[o->qtd] = (Posicao){rand()%(LARGURA-3)+3,rand()%(ALTURA-2)+2};
 		o->qtd++;
 	}
 }
@@ -162,7 +162,7 @@ int main(){
 	Jogador_t j = {.vida=5, .pontos=0, .pos={INICIO,2}, .identificador=JOGADOR};
 	Objeto_t alimento = {.qtd = 0, .identificador=ALIMENTO, .qtd_max=5, .raridade=10}, bomba = {.qtd=0, .identificador=BOMBA, .qtd_max=50, .raridade=3};
 	Objeto_t*p_obj[QTD_OBJETOS] = {&alimento, &bomba};
-	char c = 0, anterior;
+	char c = 'l', anterior;
 	printf("Digite seu nome: ");
 	scanf("%s", j.nome);
 
