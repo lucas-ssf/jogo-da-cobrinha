@@ -9,3 +9,15 @@ cd jogo-da-cobrinha
 gcc main.c -o jogo
 
 ./jogo
+
+## Controles
+K -> cima
+
+J -> baixo
+
+L -> direita
+
+H -> esquerda
+
+
+(movimentos do cursor no Vim)
